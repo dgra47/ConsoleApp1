@@ -1,0 +1,10 @@
+CREATE TABLE tasks(
+id integer NOT NULL,
+name VARCHAR(128) NOT NULL,
+assigned VARCHAR(128) NOT NULL,
+priority integer NOT NULL,
+description VARCHAR(128) NOT NULL,
+completed BOOLEAN NOT NULL,
+PRIMARY KEY (id)
+
+)
