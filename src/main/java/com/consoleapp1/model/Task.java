@@ -17,7 +17,7 @@ public class Task {
         this.completed = completed;
     }
 
-    public Task() {
+    public Task()  {
 
     }
 

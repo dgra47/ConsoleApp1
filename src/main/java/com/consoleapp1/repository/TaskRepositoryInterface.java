@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface TaskRepositoryInterface {
 
-    Task getTask(int id);
+    Task getTask(int id) ;
 
     List<Task> getAllTasks();
 

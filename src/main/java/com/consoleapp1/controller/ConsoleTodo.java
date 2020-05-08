@@ -11,7 +11,7 @@ import com.consoleapp1.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ConsoleTodo {
+public class ConsoleTodo  {
 
     public static void main(String[] args) {
         try (Connection connection = getConnectionOrExit()) {

@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TaskService {
     public static void addTask(TaskRepository taskRepository, Scanner scanner) {
-        Task task = new Task();
+        Task task = new Task() ;
         log.info("Task id : ");
         task.setId(scanner.nextInt());
         scanner.nextLine();

@@ -68,7 +68,7 @@ public class TaskRepository implements com.consoleapp1.repository.TaskRepository
             preparedStatement.setInt(4, task.getPriority());
             preparedStatement.setString(5, task.getDescription());
             preparedStatement.setBoolean(6, task.isCompleted());
-            int resultSet = preparedStatement.executeUpdate();
+            int resultSet = preparedStatement.executeUpdate() ;
             log.info("Inserted {} rows", resultSet);
 
         } catch (SQLException e) {
