@@ -1,6 +1,6 @@
-Prosta aplikacja konsolowa do zarządzania listą zadań dla działu.
-Aplikacja pozwala na dodawanie,usuwanie zadań orazodczyt zapisanych zadań.
+Simple console app fro managing list of team tasks. Allows to add,delete and return task.
 
-Zadanie zawiera informacje o numerze zadania,nazwa zadania, imie osoby odpowiedzialnej za zadanie,priorytet,
-opis oraz informacje o statusie zadania.
+Task has Id number, name , name of responsible person, priority and status of task.
+
+Before running the app please download PostgreSql .
 
