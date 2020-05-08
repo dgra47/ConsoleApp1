@@ -2,6 +2,8 @@ package com.consoleapp1.repository;
 
 import com.consoleapp1.model.Task;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,28 +12,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TaskStorage1 implements com.consoleapp1.repository.TaskStorage {
-    private static List<Task> taskStorage = new ArrayList<Task>();
-    private Connection connection;
+@Slf4j
+public class TaskRepository implements com.consoleapp1.repository.TaskRepositoryInterface {
+    private static final String SELECT_ALL_QUERY = "SELECT * from tasks";
+    private static final String SELECT_BY_ID = "SELECT * FROM tasks where id=?";
+    private final Connection connection;
 
-    public TaskStorage1(){
-        com.consoleapp1.repository.DbManager.getDbManager().connectToDatabase();
-        this.connection = com.consoleapp1.repository.DbManager.getConnection();
+    public TaskRepository(Connection connection){
+        this.connection = connection;
     }
 
     @Override
     public Task getTask(int id) {
         Task task = null;
         try {
-
-            String sql = "SELECT * FROM tasks where id=?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            task = taskMap(resultSet);
-            System.out.println(task);
-
+            while (resultSet.next()) {
+                task = taskMap(resultSet);
+                log.info("Get task {}", task);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,10 +42,9 @@ public class TaskStorage1 implements com.consoleapp1.repository.TaskStorage {
 
     @Override
     public List<Task> getAllTasks() {
-        List<Task> taskList = new ArrayList<Task>();
+        List<Task> taskList = new ArrayList<>();
         try {
-            String sql = "SELECT * from tasks";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 taskList.add(taskMap(resultSet));
@@ -59,9 +59,7 @@ public class TaskStorage1 implements com.consoleapp1.repository.TaskStorage {
 
     @Override
     public Task addTask(Task task){
-        Connection connection = null;
         try {
-            connection = com.consoleapp1.repository.DbManager.getConnection();
             String sql = "INSERT INTO tasks (id,name,assigned,priority,description,completed) VALUES (?,?,?,?,?,?);";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, task.getId());
@@ -71,6 +69,7 @@ public class TaskStorage1 implements com.consoleapp1.repository.TaskStorage {
             preparedStatement.setString(5, task.getDescription());
             preparedStatement.setBoolean(6, task.isCompleted());
             int resultSet = preparedStatement.executeUpdate();
+            log.info("Inserted {} rows", resultSet);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -82,11 +81,11 @@ public class TaskStorage1 implements com.consoleapp1.repository.TaskStorage {
     public boolean deleteTask(int id) {
         boolean isDeleted= true;
         try {
-            connection = com.consoleapp1.repository.DbManager.getConnection();
             String sql = "DELETE FROM tasks WHERE id = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1,id);
             int resultSet = preparedStatement.executeUpdate();
+            log.info("Deleted {} rows", resultSet);
 
         } catch (SQLException e) {
             e.printStackTrace();

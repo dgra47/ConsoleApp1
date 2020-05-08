@@ -3,7 +3,7 @@ package com.consoleapp1.repository;
 import com.consoleapp1.model.Task;
 import java.util.List;
 
-public interface TaskStorage {
+public interface TaskRepositoryInterface {
 
     Task getTask(int id);
 
