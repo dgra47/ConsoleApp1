@@ -1,12 +1,12 @@
 package com.consoleapp1.model;
 
 public class Task {
-    private int id;
-    private String name;
-    private String assigned;
-    private int priority;
-    private String description;
-    private boolean completed;
+    int id;
+    String name;
+    String assigned;
+    int priority;
+    String description;
+    boolean completed;
 
     public Task(int id, String name, String assigned, int priority, String description, boolean completed) {
         this.id = id;
@@ -17,7 +17,7 @@ public class Task {
         this.completed = completed;
     }
 
-    public Task()  {
+    public Task() {
 
     }
 
@@ -71,7 +71,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Book{" +
+        return "Task {" +
                 "id '" + id + '\'' +
                 ", name " + name + '\'' +
                 ", assigned" + assigned +

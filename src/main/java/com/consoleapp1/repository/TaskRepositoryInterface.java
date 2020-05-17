@@ -5,13 +5,15 @@ import java.util.List;
 
 public interface TaskRepositoryInterface {
 
-    Task getTask(int id) ;
+    Task getTask(int id);
 
     List<Task> getAllTasks();
 
     Task addTask(Task task);
 
     boolean deleteTask(int id);
+
+    Task editTask(Task task);
 
 }
 
