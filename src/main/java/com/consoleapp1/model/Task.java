@@ -1,12 +1,12 @@
 package com.consoleapp1.model;
 
 public class Task {
-    int id;
-    String name;
-    String assigned;
-    int priority;
-    String description;
-    boolean completed;
+    private int id;
+    private String name;
+    private String assigned;
+    private int priority;
+    private String description;
+    private boolean completed;
 
     public Task(int id, String name, String assigned, int priority, String description, boolean completed) {
         this.id = id;

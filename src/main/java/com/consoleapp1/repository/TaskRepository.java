@@ -1,19 +1,20 @@
 package com.consoleapp1.repository;
 
-import com.consoleapp1.model.Task;
-
-import lombok.extern.slf4j.Slf4j;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import com.consoleapp1.model.Task;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
 public class TaskRepository implements TaskRepositoryInterface {
+    private static final String DELETE = "DELETE FROM tasks WHERE id = ?";
+    private static final String UPDATE = "UPDATE tasks SET name = ?, assigned = ?, priority =?, description = ?, completed = ? WHERE id = ?";
+    private static final String INSERT = "INSERT INTO tasks (id,name,assigned,priority,description,completed) VALUES (?,?,?,?,?,?)";
     private static final String SELECT_ALL_QUERY = "SELECT * from tasks";
     private static final String SELECT_BY_ID = "SELECT * FROM tasks where id=?";
     private final Connection connection;
@@ -34,7 +35,7 @@ public class TaskRepository implements TaskRepositoryInterface {
             log.debug("Get task {}", task);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("", e);
         }
         return task;
     }
@@ -42,7 +43,7 @@ public class TaskRepository implements TaskRepositoryInterface {
 
     @Override
     public List<Task> getAllTasks() {
-        List<Task> taskList = new ArrayList<Task>();
+        List<Task> taskList = new ArrayList<>();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_QUERY);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -52,7 +53,7 @@ public class TaskRepository implements TaskRepositoryInterface {
             return taskList;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("", e);
         }
         return taskList;
     }
@@ -60,8 +61,7 @@ public class TaskRepository implements TaskRepositoryInterface {
     @Override
     public Task addTask(Task task){
         try {
-            String sql = "INSERT INTO tasks (id,name,assigned,priority,description,completed) VALUES (?,?,?,?,?,?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT);
             preparedStatement.setInt(1, task.getId());
             preparedStatement.setString(2, task.getName());
             preparedStatement.setString(3, task.getAssigned());
@@ -72,7 +72,7 @@ public class TaskRepository implements TaskRepositoryInterface {
             log.info("Inserted {} rows", resultSet);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("", e);
         }
         return task;
     }
@@ -80,8 +80,7 @@ public class TaskRepository implements TaskRepositoryInterface {
     @Override
     public Task editTask(Task task) {
         try {
-            String sql = "UPDATE tasks SET name = ?, assigned = ?, priority =?, description = ?, completed = ? WHERE id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
             preparedStatement.setString(1, task.getName());
             preparedStatement.setString(2, task.getAssigned());
             preparedStatement.setInt(3, task.getPriority());
@@ -92,7 +91,7 @@ public class TaskRepository implements TaskRepositoryInterface {
             log.info("Inserted {} rows", resultSet);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("", e);
         }
         return task;
     }
@@ -102,14 +101,13 @@ public class TaskRepository implements TaskRepositoryInterface {
     public boolean deleteTask(int id) {
         boolean isDeleted= true;
         try {
-            String sql = "DELETE FROM tasks WHERE id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE);
             preparedStatement.setInt(1,id);
             int resultSet = preparedStatement.executeUpdate();
             log.info("Deleted {} rows", resultSet);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("", e);
             isDeleted = false;
         }
         return isDeleted;

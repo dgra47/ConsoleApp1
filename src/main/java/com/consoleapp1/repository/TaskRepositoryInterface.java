@@ -1,7 +1,8 @@
 package com.consoleapp1.repository;
 
-import com.consoleapp1.model.Task;
 import java.util.List;
+
+import com.consoleapp1.model.Task;
 
 public interface TaskRepositoryInterface {
 

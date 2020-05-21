@@ -13,37 +13,50 @@ import java.util.Set;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
 
+import com.consoleapp1.enums.PropertyEnum;
+
 public class EmbeddedDbService {
-    public static Connection getConnection() throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:derby:./consoleAppDb;create=true");
+    private final PropertiesService propertiesService;
+    private Connection connection;
+
+    public EmbeddedDbService(PropertiesService propertiesService) {
+        super();
+        this.propertiesService = propertiesService;
+    }
+
+    public Connection setupDatabase() throws SQLException, IOException {
+        connection = getConnection();
+        createIfNotExists(connection);
+        return getConnection();
+    }
+
+    private Connection getConnection() throws SQLException {
+        String connectionString = propertiesService.getProperty(PropertyEnum.JDBC_CONNECTION_STRING);
+        Connection conn = DriverManager.getConnection(connectionString);
         conn.setAutoCommit(true);
 
         return conn;
     }
 
-    public static void createIfNotExists(Connection con) throws SQLException, IOException {
-        Set<String> tables = getDBTables(con);
+    private void createIfNotExists(Connection con) throws SQLException, IOException {
+        Set<String> tables = initDatabaseScheme(con);
         if (!tables.contains("tasks")) {
             ScriptRunner sr = new ScriptRunner(con);
-            try (InputStream resource = EmbeddedDbService.class.getClassLoader().getResourceAsStream("createTasksTable.sql");
+            String initScript = propertiesService.getProperty(PropertyEnum.INTITIAL_SQL_SCRIPT);
+            try (InputStream resource = EmbeddedDbService.class.getClassLoader().getResourceAsStream(initScript);
                  InputStreamReader isr = new InputStreamReader(resource)) {
                 sr.runScript(isr);
             }
         }
     }
 
-    private static Set<String> getDBTables(Connection targetDBConn) throws SQLException {
+    private Set<String> initDatabaseScheme(Connection targetDBConn) throws SQLException {
         Set<String> set = new HashSet<String>();
         DatabaseMetaData dbmeta = targetDBConn.getMetaData();
-        readDBTable(set, dbmeta, "TABLE", null);
-        return set;
-    }
-
-    private static void readDBTable(Set<String> set, DatabaseMetaData dbmeta, String searchCriteria, String schema)
-            throws SQLException {
-        ResultSet rs = dbmeta.getTables(null, schema, null, new String[] { searchCriteria });
+        ResultSet rs = dbmeta.getTables(null, null, null, new String[] { "TABLE" });
         while (rs.next()) {
             set.add(rs.getString("TABLE_NAME").toLowerCase());
         }
+        return set;
     }
 }

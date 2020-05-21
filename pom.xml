@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
-            <version>10.15.2.0</version>
+            <version>10.14.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
@@ -57,7 +57,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        com.consoleapp1.controller.ConsoleTodo
+                                        com.consoleapp1.ConsoleTodo
                                     </mainClass>
                                 </manifest>
                             </archive>
